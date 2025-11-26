@@ -51,7 +51,8 @@ pipeline {
                         -b \
                         -m shell -a 'kubectl get nodes'
 
-                    ansible-playbook -i ansible/inventory ansible/deploy_k8s.yml
+                    ansible-playbook -i ansible/inventory ansible/deploy_k8s.yml \
+    			-e image_tag=${env.BUILD_NUMBER}
                 """
             }
         }
