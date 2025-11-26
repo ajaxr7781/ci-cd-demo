@@ -1,0 +1,34 @@
+---
+- name: Deploy CI/CD demo to k3s
+  hosts: k8s
+  become: yes
+  vars:
+    app_dir: /home/ubuntu/ci-cd-demo
+
+  tasks:
+    - name: Ensure app directory exists
+      file:
+        path: "{{ app_dir }}/k8s"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+
+    - name: Copy Kubernetes manifests
+      copy:
+        src: "{{ item }}"
+        dest: "{{ app_dir }}/k8s/"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+      with_items:
+        - "{{ playbook_dir }}/../k8s/deployment.yaml"
+        - "{{ playbook_dir }}/../k8s/service.yaml"
+
+    - name: Apply Kubernetes manifests
+      become_user: ubuntu
+      shell: |
+        kubectl apply -f {{ app_dir }}/k8s/deployment.yaml
+        kubectl apply -f {{ app_dir }}/k8s/service.yaml
+      args:
+        executable: /bin/bash

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ci-cd-demo
+  labels:
+    app: ci-cd-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ci-cd-demo
+  template:
+    metadata:
+      labels:
+        app: ci-cd-demo
+    spec:
+      containers:
+        - name: web
+          image: yourdockeruser/ci-cd-demo:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
