@@ -18,7 +18,7 @@
     - name: Template Kubernetes deployment file
       template:
         src: "{{ playbook_dir }}/../k8s/deployment.yaml.j2"
-        dest: "{{ app_dir }}/k3s/deployment.yaml"
+        dest: "{{ app_dir }}/k8s/deployment.yaml"
         owner: ubuntu
         group: ubuntu
         mode: '0644'
