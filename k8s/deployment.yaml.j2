@@ -13,16 +13,12 @@ spec:
     metadata:
       labels:
         app: ci-cd-demo
+      annotations:
+        deploy-timestamp: "{{ lookup('pipe', 'date +%s') }}"
     spec:
       containers:
         - name: web
           image: ajaxr77/ci-cd-demo:{{ image_tag }}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
-          resources:
-            requests:
-              cpu: "50m"
-              memory: "64Mi"
-            limits:
-              cpu: "200m"
-              memory: "256Mi"
