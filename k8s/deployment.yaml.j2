@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ajaxr77/ci-cd-demo:latest
+          image: ajaxr77/ci-cd-demo:{{ image_tag }}
           ports:
             - containerPort: 80
           resources:

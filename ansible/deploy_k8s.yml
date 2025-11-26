@@ -6,6 +6,7 @@
     app_dir: /home/ubuntu/ci-cd-demo
 
   tasks:
+
     - name: Ensure app directory exists
       file:
         path: "{{ app_dir }}/k8s"
@@ -14,21 +15,26 @@
         group: ubuntu
         mode: '0755'
 
-    - name: Copy Kubernetes manifests
-      copy:
-        src: "{{ item }}"
-        dest: "{{ app_dir }}/k8s/"
+    - name: Template Kubernetes deployment file
+      template:
+        src: "{{ playbook_dir }}/../k8s/deployment.yaml.j2"
+        dest: "{{ app_dir }}/k3s/deployment.yaml"
         owner: ubuntu
         group: ubuntu
         mode: '0644'
-      with_items:
-        - "{{ playbook_dir }}/../k8s/deployment.yaml"
-        - "{{ playbook_dir }}/../k8s/service.yaml"
+
+    - name: Copy service.yaml
+      copy:
+        src: "{{ playbook_dir }}/../k8s/service.yaml"
+        dest: "{{ app_dir }}/k3s/service.yaml"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
 
     - name: Apply Kubernetes manifests
       become_user: ubuntu
       shell: |
-        sudo kubectl apply -f {{ app_dir }}/k8s/deployment.yaml
-        sudo kubectl apply -f {{ app_dir }}/k8s/service.yaml
+        kubectl apply -f {{ app_dir }}/k3s/deployment.yaml
+        kubectl apply -f {{ app_dir }}/k3s/service.yaml
       args:
         executable: /bin/bash
